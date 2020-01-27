@@ -41,19 +41,19 @@ class MovieForm extends Component{
     if(Number.isNaN(year)||year < 1888){
       alert('Year must be a number greater than 1888. The first movie in the world was released in 1888');
     }
-    API.post('/api/movie/add', {
-      title: title,
-      desc: desc,
-      year: year,
-      cast: cast
-    })
-    .then(function (response) {
-      alert("Movie added successfully!");
-      window.location = '/movies';
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    else{
+		API.post('/api/movie/add', {
+	      title: title,
+	      desc: desc,
+	      year: year,
+	      cast: cast
+	    }).then(function (response) {
+	      alert("Movie added successfully!");
+	      window.location = '/movies';
+	    }).catch(function (error) {
+	      console.log(error);
+	    });
+	}
   }
 }
 
