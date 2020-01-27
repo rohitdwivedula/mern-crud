@@ -1,0 +1,4 @@
+node_modules
+movies-crud/node_modules
+.env
+movies-crud/build
