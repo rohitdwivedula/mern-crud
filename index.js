@@ -2,11 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const passport = require("passport")
 const path = require("path")
+const cookieSession = require("cookie-session");
 require("dotenv").config()
 
 var app = express(); //This is our server object
-
 
 PORT = process.env.PORT || 5050
 /*
@@ -20,7 +21,7 @@ PORT = process.env.PORT || 5050
 app.use(cors({origin: true, credentials: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "movies-crud", "build")))
+app.use(express.static(path.join(__dirname, "client", "build")))
 
 /**
 	
@@ -30,7 +31,7 @@ app.use(express.static(path.join(__dirname, "movies-crud", "build")))
 
 **/
 
-var {Movie} = require("./models/Movie.js");
+require("./models/User.js");
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
@@ -38,126 +39,33 @@ DATABASE_CONNECTION = process.env.MONGODB_URI || "mongodb://localhost:27017/movi
 console.log(DATABASE_CONNECTION)
 mongoose.connect(DATABASE_CONNECTION,{useNewUrlParser: true});  
 
-app.get("/api",(req,res)=>{
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: ["somesecretsauce"]
+  })
+);
+
+/**
+	PassportJS - JWT Authentication With Google
+**/
+app.use(passport.initialize());
+app.use(passport.session());
+require("./passport.js");
+require("./routes/api/auth.js")(app);
+require("./routes/api/movie.js")(app);
+
+
+
+/// API Endpoints Begin Here
+app.get("/api", (req,res)=>{
+    console.log(req.user)
     res.send({"message": "Welcome to the movie microservice API."});
 });
 
-app.get("/api/movies",(req,res)=>{
-	/// get a list of all movies in the database
-    var movie_object = {title: req.body.title, desc: req.body.desc, year: req.body.year, cast: req.body.cast};
-    Movie.find({},(err, obj) => {
-        if (err) {
-          res.send({status:false, error:err})
-        } 
-        else {
-          res.send(obj);
-        }
-      }	
-    );
-});
-
-app.post("/api/movie/add",(req,res)=>{
-	/// add a movie to the database
-    var movie_object = {title: req.body.title, desc: req.body.desc, year: req.body.year, cast: req.body.cast};
-    Movie.create(movie_object,(err, obj) => {
-        if (err) {
-          console.log(err);
-          res.send({status:false, error:err})
-        } 
-        else {
-          console.log("New movie added successfully");
-          res.send({status:true, newMovie: obj});
-        }
-      }	
-    );
-});
-
-app.get("/api/movie/:id/delete",(req,res)=>{
-    Movie.findByIdAndDelete(req.params.id,(err, obj) => {
-        if (err) {
-          res.send({status:false, message:"Unexpected error occurred."});
-        } 
-        else {
-          res.send({status: true, movieRemoved: obj});
-        }
-      }
-    );
-});
-
-/*
-	Shown below is a sample structure for how operations on movies would work. 
-	Some of the endpoints have been completed, others haven't. 
-*/
-
-app.get('/api/movie/:id',(req,res)=>{
-	// get movie details by movie ID
-    Movie.findById(req.params.id,(err, obj) => {
-        if (err) {
-          res.send({status:false, message:"Movie not found"});
-        } 
-        else {
-          res.send({movie: obj});
-        }
-      }
-    );
-})
-
-app.post("/api/movie/:id/update",(req,res)=>{
-    /// update the attributes of a movie in the database 
-    var update = {};
-    if("title" in req.body){
-		  update["title"] = req.body.title;
-	  }
-  	if("desc" in req.body){
-  		update["desc"] = req.body.title;	
-  	}
-  	if("year" in req.body){
-  		update["year"] = req.body.year;
-  	}
-  	if("cast" in req.body){
-  		update["cast"] = req.body.cast;	
-  	}
-    Movie.findByIdAndUpdate(req.params.id, update, (err, doc) => {
-    	if(err){
-    		res.send({status:false, message:"Error: not updated"});
-    	}
-    	else {
-    		res.send({status:true, message:"Success: Updated"});	
-    	}
-    });
-});
-
-
-/* 
-	Other functionalities can be added based on the scope and relevance for your application. The ones shown 
-	above are samples to give a brief idea of how to design the functionalities/routes for a small app. 
-	Other possibilities are given below. For these to work, you might have to add more schemas and provide a 
-	mechanism for people to create an account and login. 
-*/
-
-app.get('/api/movie/:id/versions',(req,res)=>{
-    /* Route to retrieve all versions of a movie */
-})
-
-app.post('/api/movie/:id/add-version',(req,res)=>{
-    /* Route to add a version */
-})
-
-app.get('/api/movies/top-rated',(req,res)=>{
-    /* Route to get top rated movies */
-})
-
-app.get('/api/movie/:id/reviews',(req,res)=>{
-    /* Route to get reviews of a movie */
-})
-
-app.post('/api/movie/:id/rate',(req,res)=>{
-    /* Route to post a rating of a movie */
-});
-
-
+	
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "movies-crud", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 /*
