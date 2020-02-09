@@ -7,7 +7,7 @@
   "description": "MERN CRUD app for movies",
   "main": "index.js",
   "scripts": {
-    "heroku-postbuild": "cd movies-crud && npm install && npm run build",
+    "heroku-postbuild": "cd client && npm install && npm run build",
     "start": "npm install && node index.js"
   },
   "keywords": [
