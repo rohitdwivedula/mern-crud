@@ -59,8 +59,7 @@ require("./routes/api/movie.js")(app);
 
 /// API Endpoints Begin Here
 app.get("/api", (req,res)=>{
-    console.log(req.user)
-    res.send({"message": "Welcome to the movie microservice API."});
+    res.status(200).send({"message": "Welcome to the movie microservice API."});
 });
 
 	
@@ -68,11 +67,4 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
-/*
-	Staring up our server/microservice: The following peice of code starts up our server, tells which 
-	port to listen to and a callback on successful deployment
-*/
-app.listen(PORT,function(){
-    console.log("Listening on port ", PORT);
-})
-
+module.exports = app
