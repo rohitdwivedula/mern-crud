@@ -9,7 +9,7 @@
   "scripts": {
     "heroku-postbuild": "cd client && npm install && npm run build",
     "start": "npm install && node server.js",
-    "test": "NODE_ENV=test mocha test/**/*.js"
+    "test": "NODE_ENV=test mocha --exit test/**/*.js"
   },
   "keywords": [
     "microservice"
@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
+    "chai-http": "^4.3.0",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "create-react-app": "^3.3.0",

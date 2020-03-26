@@ -24,7 +24,10 @@ module.exports = app => {
   app.post("/api/movie/add",(req,res)=>{
   	/// add a movie to the database
       var movie_object = {title: req.body.title, desc: req.body.desc, year: req.body.year, cast: req.body.cast};
-      if(req.isAuthenticated()){
+      if(req.body.year < 1888){
+      	res.send({status:false, error:"There are no movies before 1888."});
+      }
+      else if(req.isAuthenticated()){
         Movie.create(movie_object,(err, obj) => {
             if (err) {
               console.log(err);
@@ -36,6 +39,9 @@ module.exports = app => {
             }
           }	
         );
+      }
+      else{
+      	res.send({status:false, error:"Not authorized"});	
       }
   });
 

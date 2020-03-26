@@ -10,7 +10,13 @@ var Schema = mongoose.Schema;
 var MovieSchema = new Schema({
   title: {type: String, required: true, unique: true},
   desc: {type: String, required: false},
-  year: {type: Number, required: true, unique: false},
+  year: {
+  	type: Number, 
+  	required: true, 
+  	unique: false, 
+  	min: 1888, 
+  	max: 2020
+  },
   cast: [{type: String}],  //This attribute is an array which stores objects of type String.
 });
 
