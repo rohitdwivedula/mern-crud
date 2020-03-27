@@ -1,4 +1,5 @@
 node_modules
-movies-crud/node_modules
+client/node_modules
 .env
-movies-crud/build
+client/build
+cypress/screenshots

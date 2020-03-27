@@ -6,6 +6,7 @@ module.exports = app => {
   app.get("/auth/test", (req, res) => {
     res.send("Auth Working properly");
   });
+  
   app.get(
     "/auth/google",
     passport.authenticate("google", {

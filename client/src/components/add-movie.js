@@ -41,6 +41,10 @@ class MovieForm extends Component{
     if(Number.isNaN(year)||year < 1888){
       alert('Year must be a number greater than 1888. The first movie in the world was released in 1888');
     }
+    if(year > 2020){
+      alert('You are allowed to enter only already released movies.');
+    }
+    
     else{
 		API.post('/api/movie/add', {
 	      title: title,

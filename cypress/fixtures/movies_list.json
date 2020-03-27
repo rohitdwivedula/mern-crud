@@ -1,0 +1,42 @@
+[
+   {
+      "cast":[
+         "Actor 1",
+         "Producer 1"
+  	  ],
+      "_id":"5e7e046d5e378925099305be",
+      "title":"American Born Confused Desi",
+      "desc":"The name is pretty self explanatory. ",
+      "year":2012,
+      "__v":0
+   
+	},
+    {
+      "cast":[
+         "Silence",
+         "Solitude",
+         "Sadness",
+         "Happiness"
+      
+	  ],
+      "_id":"5e7e04885e378925099305bf",
+      "title":"The Silent Movie",
+      "desc":"A silent movie casting all the emotions and feelings. ",
+      "year":1999,
+      "__v":0
+   
+	},
+    {
+      "cast":[
+         "Evil Computers",
+         "Awaken Humans"
+      
+	  ],
+      "_id":"5e7e04b15e378925099305c0",
+      "title":"Matrix",
+      "desc":"Remake of the classic matrix trilogy as an anime remake.",
+      "year":2019,
+      "__v":0
+   
+	}
+]
