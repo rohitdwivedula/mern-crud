@@ -23,6 +23,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "client", "build")))
 
+var device = require('express-device');
+app.use(device.capture());
+
+
 /**
 	
 	The below lines import the schema that we created for storing movies, and then sets some
@@ -54,8 +58,7 @@ app.use(passport.session());
 require("./passport.js");
 require("./routes/api/auth.js")(app);
 require("./routes/api/movie.js")(app);
-
-
+require("./routes/api/stats.js")(app);
 
 /// API Endpoints Begin Here
 app.get("/api", (req,res)=>{

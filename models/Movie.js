@@ -18,7 +18,14 @@ var MovieSchema = new Schema({
   	max: 2020
   },
   cast: [{type: String}],  //This attribute is an array which stores objects of type String.
-});
+}, 
+{ 
+  timestamps: { 
+    createdAt: 'created_at',
+    updatedAt: 'updated_at' 
+  } 
+}
+);
 
 const Movie = mongoose.model("Movie", MovieSchema);
 // Below code used for exporting the Schemas
