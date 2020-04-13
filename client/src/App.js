@@ -5,6 +5,17 @@ import Home from './components/home.js'
 import TilesView from './components/tiles-view.js'
 import MovieForm from './components/add-movie.js'
 import {Helmet} from 'react-helmet'
+
+/// shards admin template
+import withTracker from "./shards-dashboard/src/withTracker";
+
+// Layout Types
+import { DefaultLayout } from "./shards-dashboard/src/layouts";
+
+// Route Views
+import BlogOverview from "./shards-dashboard/src/views/BlogOverview";
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -15,6 +26,21 @@ function App() {
     	<Route exact path='/' component = {Home} />
     	<Route exact path='/movies' component = {TilesView} />
     	<Route exact path='/movies/add' component = {MovieForm} />
+
+    </div>
+
+    <div>
+      <Route
+            path="/shards-admin/"
+            exact={false}
+            component={withTracker(props => {
+              return (
+                <DefaultLayout {...props}>
+                  <BlogOverview {...props} />
+                </DefaultLayout>
+              );
+            })}
+          />
     </div>
     </BrowserRouter>
   );
