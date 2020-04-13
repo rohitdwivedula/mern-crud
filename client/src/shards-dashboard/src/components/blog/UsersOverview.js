@@ -4,6 +4,7 @@ import { Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
 
 import RangeDatePicker from "../common/RangeDatePicker";
 import Chart from "../../utils/chart";
+import API from "../../utils/API.js";
 
 class UsersOverview extends React.Component {
   constructor(props) {
@@ -13,76 +14,104 @@ class UsersOverview extends React.Component {
   }
 
   componentDidMount() {
-    const chartOptions = {
-      ...{
-        responsive: true,
-        legend: {
-          position: "top"
-        },
-        elements: {
-          line: {
-            // A higher value makes the line look skewed at this ratio.
-            tension: 0.3
+    API.get('/api/stats/users?days=31').then((response) => {
+        const chartOptions = {
+        ...{
+          responsive: true,
+          legend: {
+            position: "top"
           },
-          point: {
-            radius: 0
+          elements: {
+            line: {
+              // A higher value makes the line look skewed at this ratio.
+              tension: 0.3
+            },
+            point: {
+              radius: 0
+            }
+          },
+          scales: {
+            xAxes: [
+              {
+                gridLines: false,
+                ticks: {
+                  callback(tick, index) {
+                    // Jump every 7 values on the X axis labels to avoid clutter.
+                    return index % 7 !== 0 ? "" : tick;
+                  }
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  callback(tick, index) {
+                    return index % 5 !== 0 ? "" : tick;
+                  }
+                }
+              }
+            ]
+          },
+          hover: {
+            mode: "nearest",
+            intersect: false
+          },
+          tooltips: {
+            custom: false,
+            mode: "nearest",
+            intersect: false
           }
         },
-        scales: {
-          xAxes: [
-            {
-              gridLines: false,
-              ticks: {
-                callback(tick, index) {
-                  // Jump every 7 values on the X axis labels to avoid clutter.
-                  return index % 7 !== 0 ? "" : tick;
-                }
-              }
-            }
-          ],
-          yAxes: [
-            {
-              ticks: {
-                suggestedMax: 45,
-                callback(tick) {
-                  if (tick === 0) {
-                    return tick;
-                  }
-                  // Format the amounts using Ks for thousands.
-                  return tick > 999 ? `${(tick / 1000).toFixed(1)}K` : tick;
-                }
-              }
-            }
-          ]
-        },
-        hover: {
-          mode: "nearest",
-          intersect: false
-        },
-        tooltips: {
-          custom: false,
-          mode: "nearest",
-          intersect: false
-        }
-      },
-      ...this.props.chartOptions
-    };
+        ...this.props.chartOptions
+      };
 
-    const BlogUsersOverview = new Chart(this.canvasRef.current, {
-      type: "LineWithLine",
-      data: this.props.chartData,
-      options: chartOptions
+      var myData = response.data.data;
+      var values = [];
+      var labels = [];
+      for(var i=0;i<myData.length;i++){
+        labels.push("Day " + i);
+        values.push(myData[i]);
+      }
+      var time_series_data = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Daily New Users (Last 15 Days)",
+            fill: "start",
+            data: values,
+            backgroundColor: "rgba(0,123,255,0.1)",
+            borderColor: "rgba(0,123,255,1)",
+            pointBackgroundColor: "#ffffff",
+            pointHoverBackgroundColor: "rgb(0,123,255)",
+            borderWidth: 1.5,
+            pointRadius: 0,
+            pointHoverRadius: 3
+          }
+        ]
+      };
+      const BlogUsersOverview = new Chart(this.canvasRef.current, {
+        type: "LineWithLine",
+        data: time_series_data,
+        options: chartOptions
+      });
+
+      // They can still be triggered on hover.
+      const buoMeta = BlogUsersOverview.getDatasetMeta(0);
+      buoMeta.data[0]._model.radius = 0;
+      buoMeta.data[
+        time_series_data.datasets[0].data.length - 1
+      ]._model.radius = 0;
+
+      // Render the chart.
+      BlogUsersOverview.render();
+
+    }).catch(function (error) {
+      console.log("ERROR LOADING DATA");
+      console.log(error);
+      // window.location = '/'
     });
 
-    // They can still be triggered on hover.
-    const buoMeta = BlogUsersOverview.getDatasetMeta(0);
-    buoMeta.data[0]._model.radius = 0;
-    buoMeta.data[
-      this.props.chartData.datasets[0].data.length - 1
-    ]._model.radius = 0;
 
-    // Render the chart.
-    BlogUsersOverview.render();
   }
 
   render() {
@@ -138,39 +167,39 @@ UsersOverview.defaultProps = {
     labels: Array.from(new Array(30), (_, i) => (i === 0 ? 1 : i)),
     datasets: [
       {
-        label: "Current Month",
+        label: "New Users",
         fill: "start",
         data: [
-          500,
-          800,
-          320,
-          180,
-          240,
-          320,
-          230,
-          650,
-          590,
-          1200,
-          750,
-          940,
-          1420,
-          1200,
-          960,
-          1450,
-          1820,
-          2800,
-          2102,
-          1920,
-          3920,
-          3202,
-          3140,
-          2800,
-          3200,
-          3200,
-          3400,
-          2910,
-          3100,
-          4250
+          5,
+          8,
+          0,
+          0,
+          0,
+          3,
+          2,
+          6,
+          5,
+          12,
+          7,
+          9,
+          1,
+          1,
+          9,
+          1,
+          10,
+          20,
+          2,
+          1,
+          30,
+          32,
+          30,
+          20,
+          30,
+          30,
+          30,
+          2,
+          3,
+          0
         ],
         backgroundColor: "rgba(0,123,255,0.1)",
         borderColor: "rgba(0,123,255,1)",
@@ -179,51 +208,6 @@ UsersOverview.defaultProps = {
         borderWidth: 1.5,
         pointRadius: 0,
         pointHoverRadius: 3
-      },
-      {
-        label: "Past Month",
-        fill: "start",
-        data: [
-          380,
-          430,
-          120,
-          230,
-          410,
-          740,
-          472,
-          219,
-          391,
-          229,
-          400,
-          203,
-          301,
-          380,
-          291,
-          620,
-          700,
-          300,
-          630,
-          402,
-          320,
-          380,
-          289,
-          410,
-          300,
-          530,
-          630,
-          720,
-          780,
-          1200
-        ],
-        backgroundColor: "rgba(255,65,105,0.1)",
-        borderColor: "rgba(255,65,105,1)",
-        pointBackgroundColor: "#ffffff",
-        pointHoverBackgroundColor: "rgba(255,65,105,1)",
-        borderDash: [3, 3],
-        borderWidth: 1,
-        pointRadius: 0,
-        pointHoverRadius: 2,
-        pointBorderColor: "rgba(255,65,105,1)"
       }
     ]
   }

@@ -26,21 +26,7 @@ function App() {
     	<Route exact path='/' component = {Home} />
     	<Route exact path='/movies' component = {TilesView} />
     	<Route exact path='/movies/add' component = {MovieForm} />
-
-    </div>
-
-    <div>
-      <Route
-            path="/shards-admin/"
-            exact={false}
-            component={withTracker(props => {
-              return (
-                <DefaultLayout {...props}>
-                  <BlogOverview {...props} />
-                </DefaultLayout>
-              );
-            })}
-          />
+      <Route exact path="/shards-admin/" component={BlogOverview}/>
     </div>
     </BrowserRouter>
   );

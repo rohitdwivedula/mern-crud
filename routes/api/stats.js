@@ -109,4 +109,17 @@ module.exports = app => {
 	    else res.status(200).send({type: request_type, data: result});
 	});
   });
+
+  app.get("/api/stats/views/", (req,res)=>{
+  	PageView.countDocuments({},(err, count) => {
+      if (err) {
+        res.status(500).send({status:false, error:err})
+      } 
+      else {
+        res.status(200).send({"views": count});
+      }
+    });
+
+
+  });
 }
