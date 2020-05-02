@@ -41,5 +41,5 @@ To setup TravisCI:
 2. Activate your Github repositories on Travis CI by giving the relevant permissions.
 ![](images/travis-permissions.png)
 3. Wait for a while as Travis CI connects to Github. Search for the relevant app and click on it. TravisCI will run the unit tests and if you’ve configured everything properly, you’ll see a green screen of success.
-![](travis-tests-success.png)
+![](images/travis-tests-success.png)
 4. Go back to the Heroku, and open your app settings and go to the deploy section. Click on the “Enable Automatic Deploys” button. Make sure to select the tick box “Wait for CI to pass before deploy”. Doing this will ensure that your app will be redeployed only if the unit tests pass.
