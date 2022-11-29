@@ -1,3 +1,5 @@
+# IS F341 - Software Engineering
+
 Tutorials to [install](tutorials/installation.md) and [deploy](tutorials/deploy.md) this app are explained in the `.md` files in the `tutorials` directory.
 
 - This application uses PassportJS + Google OAuth for authentication.
