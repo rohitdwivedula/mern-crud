@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "cypress": "^4.2.0",
-    "mocha": "^7.0.1",
+    "cypress": "^4.12.1",
+    "mocha": "^7.2.0",
     "supertest": "^4.0.2"
   }
 }
